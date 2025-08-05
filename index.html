@@ -35,16 +35,21 @@
       const file = fileInput.files[0];
       const text = await file.text();
 
-      const res = await fetch(`${getAPIBase()}/analyze`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ csv: text })
-      });
+      try {
+        const res = await fetch(`${getAPIBase()}/analyze`, {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ csv: text })
+        });
 
-      const json = await res.json();
-      document.getElementById("output").textContent = JSON.stringify(json, null, 2);
+        const json = await res.json();
+        document.getElementById("output").textContent = JSON.stringify(json, null, 2);
+      } catch (error) {
+        document.getElementById("output").textContent = `Error: ${error.message}`;
+      }
     }
   </script>
 </body>

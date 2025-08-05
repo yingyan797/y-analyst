@@ -31,8 +31,8 @@ def _response(status, body):
         "headers": {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "https://yingyan797.github.io",  # Allow all origins
-            "Access-Control-Allow-Headers": "*",  # Allow all headers
-            "Access-Control-Allow-Methods": "*"   # Allow all methods
+            "Access-Control-Allow-Headers": "Content-Type,Authorization,X-Requested-With,Accept,Origin",
+            "Access-Control-Allow-Methods": "GET,POST,OPTIONS"   # Allow all methods
         },
         "body": json.dumps(body)
     }
