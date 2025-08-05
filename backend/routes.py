@@ -30,7 +30,7 @@ def _response(status, body):
         "statusCode": status,
         "headers": {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "https://yingyan797.github.io/y-analyst",  # Allow all origins
+            "Access-Control-Allow-Origin": "https://yingyan797.github.io",  # Allow all origins
             "Access-Control-Allow-Headers": "*",  # Allow all headers
             "Access-Control-Allow-Methods": "*"   # Allow all methods
         },
