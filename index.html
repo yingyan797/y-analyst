@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lambda CSV Upload</title>
+  <style>
+    .section {
+        background-color: skyblue;
+        padding: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h2 class="section">Upload CSV for Analysis</h2>
+  Select CSV file: <input type="file" id="fileInput" accept=".csv" /><br>
+  API ID: <input type="text" id="api">, Region: <input type="text" id="region">
+  <button onclick="uploadCsv()">Upload & Analyze</button>
+    <h4 class="section">Result</h4>
+  <pre id="output"></pre>
+
+  <script>
+    const apiId = document.getElementById("api").value;
+    const region = document.getElementById("region").value;
+    const apiBase = "https://"+apiId+".execute-api."+region+".amazonaws.com/Prod";
+
+    async function uploadCsv() {
+      const fileInput = document.getElementById("fileInput");
+      if (!fileInput.files.length) {
+        alert("Please select a CSV file.");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const text = await file.text();
+
+      const res = await fetch(`${apiBase}/analyze`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ csv: text })
+      });
+
+      const json = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(json, null, 2);
+    }
+  </script>
+</body>
+</html>
