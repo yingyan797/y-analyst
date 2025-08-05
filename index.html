@@ -18,9 +18,12 @@
   <pre id="output"></pre>
 
   <script>
-    const apiId = document.getElementById("api").value;
-    const region = document.getElementById("region").value;
-    const apiBase = "https://"+apiId+".execute-api."+region+".amazonaws.com/Prod";
+    function getAPIBase() {
+      const apiId = document.getElementById("api").value;
+      const region = document.getElementById("region").value;
+      const apiBase = "https://"+apiId+".execute-api."+region+".amazonaws.com/Prod";
+      return apiBase;
+    }
 
     async function uploadCsv() {
       const fileInput = document.getElementById("fileInput");
@@ -32,7 +35,7 @@
       const file = fileInput.files[0];
       const text = await file.text();
 
-      const res = await fetch(`${apiBase}/analyze`, {
+      const res = await fetch(`${getAPIBase()}/analyze`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

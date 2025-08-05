@@ -5,7 +5,7 @@ Description: Python backend with multiple routes and environment variables
 Globals:
   Function:
     Timeout: 5
-    Runtime: python3.12
+    Runtime: python3.10
 
 Resources:
   ApiFunction:
