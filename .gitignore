@@ -1,2 +1,8 @@
 .env
 .aws-sam/
+aws_server
+dataset
+data_engineering/glob*
+data_engineering/geo*
+algorithm.txt
+**/__pycache__

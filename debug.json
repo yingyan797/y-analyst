@@ -1,0 +1,7 @@
+[
+    {
+      "attributes": ["suppliers.name"],
+      "relevant_tables": ["suppliers", "product_suppliers", "products", "reviews"],
+      "request_description": "Find suppliers who do not have any product with review score of 4. This involves joining the suppliers, product_suppliers, products, and reviews tables. First, find product_ids that have a review rating of 4. Then, identify the suppliers associated with the remaining products (those without a review rating of 4). Finally, select the names of these suppliers."
+    }
+  ]
