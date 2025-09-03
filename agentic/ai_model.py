@@ -169,7 +169,9 @@ class DataAnalysisAgent:
             state["user_query"], state["query_results"], state.get("context", "")
         )
         response = self.llm.invoke(prompt)
-        return {**state, "final_answer": response}
+        final_state = {**state}
+        final_state["final_answer"] = response
+        return final_state
     
     def answer_question(self, user_query: str, context: str = "") -> str:
         initial_state = {
@@ -181,7 +183,8 @@ class DataAnalysisAgent:
     
 if __name__ == "__main__":
     agent = DataAnalysisAgent("data_engineering/exp.sqlite", AIModel(False))
-    print(agent.answer_question("How to write a resume for software engineer", ""))
+    print(agent.answer_question("How to cook it if I don't have an oven", 
+                "The user just bought a large whole chicken and want to serve it with 4 people for dinner."))
     # print(agent.answer_question("Which suppliers doesn't receive any review score of 4", "context"))
     # with open("debug.json", "r") as f:
     #     response = f.read()
