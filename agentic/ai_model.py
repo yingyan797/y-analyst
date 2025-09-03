@@ -119,7 +119,11 @@ class DataAnalysisAgent:
         workflow.add_node("pause", self._pause)
         
         workflow.set_entry_point("analyze_query")
-        workflow.add_edge("analyze_query", "generate_sql")
+        workflow.add_conditional_edges(
+            "analyze_query", 
+            lambda state: bool(state["data_needed"]) and not(state["db_requests"]),                         
+            {True: "generate_sql", False: "pause"}
+        )
         workflow.add_edge("generate_sql", "execute_queries")
         workflow.add_edge("execute_queries", "generate_answer")
         workflow.add_edge("generate_answer", "pause")
@@ -134,8 +138,12 @@ class DataAnalysisAgent:
             self.schema, state["user_query"], state.get("context", "")
         )
         response = self.llm.invoke(prompt)
-        db_requests = self._parse_json_from_response(response) or []
-        return {**state, "db_requests": db_requests}
+        answer_construct = self._parse_json_from_response(response)
+        return {**state, 
+                "data_needed": answer_construct["data_needed"], 
+                "final_answer": answer_construct["direct_answer"], 
+                "db_requests": answer_construct["requests"]
+            }
     
     def _generate_sql(self, state: Dict[str, Any]) -> Dict[str, Any]:
         prompt = pr.create_db_request_to_sqlite_query_prompt(
@@ -173,7 +181,8 @@ class DataAnalysisAgent:
     
 if __name__ == "__main__":
     agent = DataAnalysisAgent("data_engineering/exp.sqlite", AIModel(False))
-    print(agent.answer_question("Which suppliers doesn't receive any review score of 4", "context"))
+    print(agent.answer_question("How to write a resume for software engineer", ""))
+    # print(agent.answer_question("Which suppliers doesn't receive any review score of 4", "context"))
     # with open("debug.json", "r") as f:
     #     response = f.read()
     

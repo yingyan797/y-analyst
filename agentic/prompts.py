@@ -1,6 +1,6 @@
 def create_query_to_db_request_desc_prompt(schema, query, context):
     return f"""
-You are a data analyst AI. Analyze the user's query and database schema to create structured database request forms.
+You are a data analyst AI. Analyze the user's query directly or consult to database for more detail.
 
 User Query: {query}
 
@@ -8,28 +8,25 @@ Context: {context}
 
 Database Schema: {schema}
 
-Task: Create a list of database request forms. Each form should specify:
+Task: Determine if you can answer the question directly or need database consultation.
 
-1. **attributes**: List of column names needed from the database
-2. **relevant_tables**: List of table names that contain the required data
-3. **request_description**: Detailed description of data processing operations needed (joins, filters, aggregations like min/max/avg, grouping, sorting, etc.)
+If you can answer directly (general questions, explanations, definitions), set data_needed to false and provide the answer.
+If you need database data, set data_needed to true and create database request forms. Specify which tables jointly contain the peices of information needed and describe how to obtain the data attributes.
 
 Output Format:
-[
-  {{
-    "attributes": ["column1", "column2", "table2.column3"],
-    "relevant_tables": ["table1", "table2"],
-    "request_description": "Join table1 and table2 on common_id, filter by condition, calculate max(value), group by category"
-  }}
-]
+{{
+    "data_needed": true/false,
+    "direct_answer": "Your direct answer if data_needed is false",
+    "requests": [
+        {{
+            "attributes": ["column1", "column2"],
+            "relevant_tables": ["table1", "table2"],
+            "request_description": "Join, filter, aggregate operations needed"
+        }}
+    ]
+}}
 
-Analyze the query step by step:
-1. Identify the set of information relevant or helpful for answering what the user asks
-2. Determine which tables contain each piece of information
-3. Specify exact column names needed
-4. Describe the data processing operations required
-
-Provide only the JSON array of request forms.
+Provide only the JSON response.
 """
 
 def create_db_request_to_sqlite_query_prompt(db_requests, schema):
